@@ -1,1 +1,1 @@
-## This project is still under construction
+## This is a public grievance management website (work under process)
