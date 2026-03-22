@@ -68,17 +68,6 @@ const updateGrievance = expressAsyncHandler(async (req, res) => {
     res.status(200).json(updated);
 });
 
-const trackGrievance = expressAsyncHandler(async(req, res)=> {
-    const grievance = await Grievance.findById(req.params.id)
-
-    if (!grievance) {
-        res.status(404);
-        throw new Error("Grievance not found");
-    }
-    
-    res.status(200).json({"status": grievance.status})
-})
-
 const deleteGrievance = expressAsyncHandler(async(req, res)=> {
     const grievance = await Grievance.findById(req.params.id);
 
@@ -100,7 +89,7 @@ const deleteGrievance = expressAsyncHandler(async(req, res)=> {
     });
 })
 
-//-------------------------------FOR USER ONLY--------------------------------------//
+//-------------------------------FOR Admin ONLY--------------------------------------//
 const seeAllGrievances = expressAsyncHandler(async(req, res)=> {
     const grievances = await Grievance.find()
 
@@ -128,5 +117,30 @@ const updateStatus = expressAsyncHandler(async (req, res) => {
     res.status(200).json(updated);
 });
 
+//----------------------------------------Shared-----------------------------------//
+const getStats = expressAsyncHandler(async (req, res)=> {
+    try{
+        let filter = {}
+        
+        //if normal user then filter their ids
+        if(req.user.role !== 'admin'){
+            filter = {user: req.user._id}
+        }
 
-module.exports = {lodgeGrievances, seeMyGrievances, updateGrievance, trackGrievance, deleteGrievance, seeAllGrievances, updateStatus};
+        const created = await Grievance.countDocuments(filter);
+        const pending = await Grievance.countDocuments({ ...filter, status: "Pending" });
+        const processing = await Grievance.countDocuments({ ...filter, status: "Processing" });
+        const resolved = await Grievance.countDocuments({ ...filter, status: "Resolved" });
+
+        res.status(200).json({
+        created,
+        pending,
+        processing,
+        resolved
+    });
+    }catch(error){
+        res.status(500).json({ message: error.message });
+    }
+})
+
+module.exports = {lodgeGrievances, seeMyGrievances, updateGrievance, deleteGrievance, seeAllGrievances, updateStatus, getStats};
