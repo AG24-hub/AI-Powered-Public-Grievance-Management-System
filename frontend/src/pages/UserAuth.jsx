@@ -1,7 +1,10 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import UserContext from '../context/UserProvider';
+import { loginUser, registerUser } from '../Services/userService';
+
 
 const UserAuth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,6 +14,7 @@ const UserAuth = () => {
   const [isExpanding, setIsExpanding] = useState(false);
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const { setUser } = useContext(UserContext)
   const navigate = useNavigate();
 
   const handleToggle = () => {
@@ -37,15 +41,16 @@ const UserAuth = () => {
 
         if (isLogin) {
             // LOGIN LOGIC
-            const { data } = await axios.post("/api/user/login", { email, password }, config);
+            const data = await loginUser(email, password)
             toast.success("Login Successful");
+            setUser(data)
             localStorage.setItem("userInfo", JSON.stringify(data));
 
             setName("");
             setEmail("");
             setPassword("");
 
-            navigate("/dashboard");
+            data.role === "admin" ? navigate("/adminDashboard") : navigate("/dashboard");
         } else {
             // REGISTER LOGIC
             if (!email || !password) {
@@ -53,7 +58,7 @@ const UserAuth = () => {
               setLoading(false);
               return;
             }
-            const { data } = await axios.post("/api/user/register", { name, email, password }, config);
+            const data = await registerUser(name, email, password)
             toast.success("Registration Successful");
             localStorage.setItem("userInfo", JSON.stringify(data));
 

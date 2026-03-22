@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from './pages/landing'
 import UserAuth from './pages/UserAuth';
 import Dashboard from './pages/Dashboard';
+import AdminDashboard from './pages/AdminDashboard';
+import ProtectedRoute from "./routes/protectedRoute";
 import { Toaster } from 'react-hot-toast';
 
 function App() {
@@ -13,7 +15,8 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage/>} />
           <Route path="/authentication" element={<UserAuth/>} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}/>
+          <Route path="/adminDashboard" element={<AdminDashboard />} />
           {/*<Route path="/complaint" element={<ComplaintForm />} />*/}
         </Routes>
       </BrowserRouter>
