@@ -1,5 +1,6 @@
 const expressAsyncHandler = require('express-async-handler')
 const Grievance = require('../Models/grievanceModel')
+const user = require('../Models/UserModel')
 
 
 //-------------------------------FOR USER ONLY--------------------------------------//
@@ -28,6 +29,8 @@ const lodgeGrievances = expressAsyncHandler(async(req, res)=> {
         district, address, pincode, priority, contactNum, complaintTitle, complaintDetails, supportingDocs
     })
 
+    await grievance.populate("user", "-password")
+
     if(grievance){
         res.status(201).json({grievance})
     }else {
@@ -37,7 +40,7 @@ const lodgeGrievances = expressAsyncHandler(async(req, res)=> {
 })
 
 const seeMyGrievances = expressAsyncHandler(async(req, res)=> {
-    const myGrievances = await Grievance.find({user: req.user._id})
+    const myGrievances = await Grievance.find({user: req.user._id}).populate("user", "name email").sort("-createdAt")
     if(myGrievances){
         res.status(200).json(myGrievances)
     }
@@ -45,7 +48,7 @@ const seeMyGrievances = expressAsyncHandler(async(req, res)=> {
 
 const updateGrievance = expressAsyncHandler(async (req, res) => {
 
-    const grievance = await Grievance.findById(req.params.id);
+    const grievance = await Grievance.findById(req.params.id).populate("user", "name email").sort("-createdAt")
 
     if (!grievance) {
         res.status(404);
@@ -91,7 +94,7 @@ const deleteGrievance = expressAsyncHandler(async(req, res)=> {
 
 //-------------------------------FOR Admin ONLY--------------------------------------//
 const seeAllGrievances = expressAsyncHandler(async(req, res)=> {
-    const grievances = await Grievance.find()
+    const grievances = await Grievance.find().populate("user", "name email").sort("-createdAt")
 
     if(!grievances){
         res.status(404);
@@ -103,14 +106,21 @@ const seeAllGrievances = expressAsyncHandler(async(req, res)=> {
 
 const updateStatus = expressAsyncHandler(async (req, res) => {
 
-    const grievance = await Grievance.findById(req.params.id);
+    const grievance = await Grievance.findById(req.params.id).populate("user", "name email")
 
     if (!grievance) {
         res.status(404);
         throw new Error("Grievance not found");
     }
+    console.log("BODY:", req.body);
+    const { status } = req.body;
 
-    grievance.status = req.body.status
+    if (!status) {
+        res.status(400);
+        throw new Error("Status is required");
+    }
+
+    grievance.status = status;
 
     const updated = await grievance.save();
 

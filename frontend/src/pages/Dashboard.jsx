@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 //Lucide React is a popular open-source icon library for React applications that provides a collection of beautiful, lightweight, and consistent SVG icons.
-import { Search } from 'lucide-react';
 import SideBar from "../components/SideBar"
 import UserContext from '../context/UserProvider';
-import GrievaceContext from '../context/GrievanceProvider';
+import {GrievanceContext} from '../context/GrievanceProvider';
 
 const Dashboard = () => {
 
   const {user} = useContext(UserContext)
-  const {grievances, fetchMyGrievances, stats, fetchStats} = useContext(GrievaceContext)
+  const {grievances, fetchMyGrievances, stats, fetchStats} = useContext(GrievanceContext)
 
   useEffect(()=> {
     fetchMyGrievances(),

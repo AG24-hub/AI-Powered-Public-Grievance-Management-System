@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import Footer from "../components/footer";
 import { FEATURES } from "../components/features";
 import { STEPS } from "../components/steps";
 
@@ -147,7 +146,9 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <Footer/>
+      <footer className="bg-gray-900 text-gray-300 py-6 text-center text-sm">
+        © 2025 Grievance Management System. All rights reserved.
+      </footer>
     </div>
   );
 }

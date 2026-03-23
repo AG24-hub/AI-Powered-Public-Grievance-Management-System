@@ -36,25 +36,23 @@ export const seeAllStats = async()=> {
 
 //Admin: see all grievances
 export const seeAllGrievances = async()=> {
-    const res = await axios.get(`${API}/all`)
+    const res = await axios.get(`${API}/all`, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
     return res.data
 }
 
 //Admin: updating the status of grievances
 export const updateStatus = async(id, status)=> {
-    const res = await axios.put(`${API}/status/${id}`, status)
+    const res = await axios.put(`${API}/status/${id}`, {status}, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
     return res.data
 }
 
 //User: update grievances
 export const update = async(id, data)=> {
     const res = await axios.put(`${API}/${id}`, data)
-    return res.data
-}
-
-//User: track grievances
-export const track = async(id)=> {
-    const res = await axios.get(`${API}/${id}`)
     return res.data
 }
 
