@@ -9,10 +9,14 @@ const Dashboard = () => {
   const {user} = useContext(UserContext)
   const {grievances, fetchMyGrievances, stats, fetchStats} = useContext(GrievanceContext)
 
+  const [activeTab, setActiveTab] = useState("Dashboard");
+
   useEffect(()=> {
-    fetchMyGrievances(),
-    fetchStats()
-  }, [])
+    if (location.pathname === "/dashboard") {
+      fetchMyGrievances();
+      fetchStats();
+    }
+  }, [location.pathname] )
 
   const statsData = [
     { label: "Created", val: stats?.created || 0, color: "from-blue-500 to-blue-600" },
@@ -24,7 +28,10 @@ const Dashboard = () => {
   return (
       <div className="flex flex-col md:flex-row h-screen bg-slate-50 font-sans">
         {/* Sidebar needs to be hidden or a hamburger menu on mobile */}
-        <SideBar />
+        <SideBar 
+          activeTab={activeTab} 
+          setActiveTab={setActiveTab}
+        />
 
         <main className="flex-1 overflow-y-auto w-full">
           <header className="bg-white border-b px-4 md:px-8 py-4 flex justify-between items-center sticky top-0 z-10">
@@ -77,7 +84,7 @@ const Dashboard = () => {
                       {grievances?.map((g) => (
                         <tr key={g._id} className="hover:bg-slate-50 transition">
                           {/*ID */}
-                          <td className="px-6 py-4 font-mono text-sm text-blue-600">#GRV-{g._id.slice(-5)}</td>
+                          <td className="px-6 py-4 font-mono text-sm text-blue-600">{g._id}</td>
                           {/*Description*/}
                           <td className="px-6 py-4 text-slate-600 text-sm italic">{g.complaintDetails}</td>
                           {/*status*/}

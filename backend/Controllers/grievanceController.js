@@ -56,7 +56,7 @@ const updateGrievance = expressAsyncHandler(async (req, res) => {
     }
 
     // allow only owner to update
-    if (grievance.user.toString() !== req.user._id.toString()) {
+    if (grievance.user._id.toString() !== req.user._id.toString()) {
         res.status(401);
         throw new Error("Not authorized");
     }
@@ -65,7 +65,7 @@ const updateGrievance = expressAsyncHandler(async (req, res) => {
     const updated = await Grievance.findByIdAndUpdate(
         req.params.id,
         req.body,
-        { new: true } //show new changes not the previous one
+        { returnDocument: 'after' } //show new changes not the previous one
     )
 
     res.status(200).json(updated);

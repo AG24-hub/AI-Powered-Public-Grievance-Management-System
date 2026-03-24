@@ -10,11 +10,11 @@ const userInfo = localStorage.getItem("userInfo")
 const token = userInfo ? JSON.parse(userInfo).token : null
 //console.log("Token being sent:", token);
 
-
-
 //User: create grievance
-export const createGrievances = async(district, address, pincode, priority, contactNum, complaintTitle, complaintDetails, supportingDocs)=> {
-    const res = await axios.post(`${API}/`, {district, address, pincode, priority, contactNum, complaintTitle, complaintDetails, supportingDocs})
+export const createGrievances = async(formData)=> {
+    const res = await axios.post(`${API}/`, formData, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
     return res.data
 }
 
@@ -52,12 +52,16 @@ export const updateStatus = async(id, status)=> {
 
 //User: update grievances
 export const update = async(id, data)=> {
-    const res = await axios.put(`${API}/${id}`, data)
+    const res = await axios.put(`${API}/${id}`, data, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
     return res.data
 }
 
 //User: delete grievances
 export const deleteG = async(id)=> {
-    const res = await axios.delete(`${API}/${id}`)
+    const res = await axios.delete(`${API}/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
     return res.data
 }

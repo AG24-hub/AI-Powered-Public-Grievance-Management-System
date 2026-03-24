@@ -1,18 +1,18 @@
 import React, { useContext, useState } from 'react';
-import { LayoutDashboard, MessageSquare, PlusCircle, User, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, PlusCircle, User, LogOut, Menu, X, ClipboardList  } from 'lucide-react';
 import UserContext from '../context/UserProvider';
 import { useNavigate } from 'react-router-dom';
 
-const SideBar = () => {
+const SideBar = ({activeTab, setActiveTab}) => {
   const [isOpen, setIsOpen] = useState(false)
   const { setUser } = useContext(UserContext)
   const navigate = useNavigate()
 
   const menuItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, active: true },
-    { name: 'Lodge Grievance', icon: PlusCircle },
-    { name: 'Chatbot AI', icon: MessageSquare },
-    { name: 'Profile', icon: User }
+    { name: 'dashboard', icon: LayoutDashboard},
+    { name: 'complaint', icon: PlusCircle },
+    { name: 'manage', icon: ClipboardList },
+    { name: 'chatbotAI', icon: MessageSquare },
   ];
 
   const handleLogOut = ()=> {
@@ -68,9 +68,17 @@ const SideBar = () => {
             <button 
               key={item.name} 
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-                item.active ? 'bg-white/20 shadow-inner' : 'hover:bg-white/10'
+                activeTab === item.name ? 'bg-white/20 shadow-inner' : 'hover:bg-white/10'
               }`}
-              onClick={() => setIsOpen(false)} // Close menu after selecting item on mobile
+              onClick={() => {
+                setActiveTab(item.name); 
+                if(item.name !== "dashboard"){
+                  navigate(`/dashboard/${item.name}`)
+                }else{
+                  navigate('/dashboard')
+                }
+                setIsOpen(false)
+              }} // Close menu after selecting item on mobile
             >
               <item.icon size={20} /> {item.name}
             </button>

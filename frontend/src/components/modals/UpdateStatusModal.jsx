@@ -10,7 +10,7 @@ import {GrievanceContext} from '../../context/GrievanceProvider';
     const handleSubmit = async () => {
         await changeStatus(id, status);
         onClose();
-  };
+    };
 
   return (
     <ModalWrapper onClose={onClose}>

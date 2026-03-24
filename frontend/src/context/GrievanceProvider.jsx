@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { seeAllGrievances, seeAllStats, seeMyGrievances, updateStatus } from "../Services/grievanceService";
+import { createGrievances, deleteG, seeAllGrievances, seeAllStats, seeMyGrievances, update, updateStatus } from "../Services/grievanceService";
 
 //create context
 export const GrievanceContext = createContext()
@@ -12,6 +12,49 @@ export const GrievanceProvider = ({children})=> {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null)
     
+    //create grievances
+    const createComplaint = async(formData) => {
+      try {
+        setLoading(true)
+        const created = await createGrievances(formData)
+        return created
+      }catch(error){
+        setError(error.message);
+      }finally {
+        setLoading(false);
+      }
+    }
+
+    //update grievances
+    const updateComplaint = async(id, updatedData) => {
+      try{
+        setLoading(true)
+        const updated = await update(id, updatedData)
+        setGrievances((prev) =>
+          prev.map((g) =>
+            g._id === id ? updated : g
+          )
+        )
+
+      }catch(error){
+        setError(error.message);
+      }finally {
+        setLoading(false);
+      }
+    }
+
+    //delete grievance
+    const deleteComplaint = async(id)=> {
+      try {
+        setLoading(true)
+        await deleteG(id)
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
     //get my grievances
     const fetchMyGrievances = async () => {
       try {
@@ -75,7 +118,7 @@ export const GrievanceProvider = ({children})=> {
     };
 
   return (
-    <GrievanceContext.Provider value={{grievances, fetchMyGrievances, allGrievances, fetchAllGrievances, stats, fetchStats, changeStatus}}>
+    <GrievanceContext.Provider value={{grievances, fetchMyGrievances, allGrievances, fetchAllGrievances, stats, fetchStats, changeStatus, createComplaint, deleteComplaint, updateComplaint}}>
         {children}
     </GrievanceContext.Provider>
   )
