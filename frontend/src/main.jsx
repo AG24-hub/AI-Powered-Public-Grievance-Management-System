@@ -4,11 +4,14 @@ import './index.css'
 import App from './App.jsx'
 import { UserProvider } from './context/UserProvider.jsx'
 import { GrievanceProvider } from './context/GrievanceProvider.jsx'
+import { ChatbotProvider } from './context/chatbotProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <UserProvider>
     <GrievanceProvider>
-      <App />
+      <ChatbotProvider>
+        <App />
+      </ChatbotProvider>
     </GrievanceProvider>
   </UserProvider>
 )

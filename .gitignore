@@ -63,3 +63,14 @@ Thumbs.db
 *.joblib
 *.h5
 *.pt
+
+
+# =========================
+# chatbot files
+# =========================
+.venv/ 
+__pycache__/ 
+.env 
+*.pyc 
+chroma_db/
+data
