@@ -16,7 +16,7 @@ const Dashboard = () => {
       fetchMyGrievances();
       fetchStats();
     }
-  }, [location.pathname] )
+  }, [location.pathname])
 
   const statsData = [
     { label: "Created", val: stats?.created || 0, color: "from-blue-500 to-blue-600" },
