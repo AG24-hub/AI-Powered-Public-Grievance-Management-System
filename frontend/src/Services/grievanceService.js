@@ -3,15 +3,14 @@ import axios from "axios";
 const API = "/api/grievances"
 
 //as I have saved everything under userInfo in my log in function I will first fetch it
-const userInfo = localStorage.getItem("userInfo")
-//console.log("Raw userInfo from storage:", userInfo);
-
-//extract userinfo from it
-const token = userInfo ? JSON.parse(userInfo).token : null
-//console.log("Token being sent:", token);
+const getToken = () => {
+    const userInfo = localStorage.getItem("userInfo");
+    return userInfo ? JSON.parse(userInfo).token : null;
+};
 
 //User: create grievance
 export const createGrievances = async(formData)=> {
+    const token = getToken();
     const res = await axios.post(`${API}/`, formData, {
         headers: { Authorization: `Bearer ${token}` }
     })
@@ -20,6 +19,7 @@ export const createGrievances = async(formData)=> {
 
 //User: see my grievances
 export const seeMyGrievances = async()=> {
+    const token = getToken();
     const res = await axios.get(`${API}/my`, {
         headers: { Authorization: `Bearer ${token}` }
     })
@@ -28,6 +28,7 @@ export const seeMyGrievances = async()=> {
 
 //Shared: see stats
 export const seeAllStats = async()=> {
+    const token = getToken();
     const res = await axios.get(`${API}/stats`, {
         headers: { Authorization: `Bearer ${token}` }
     })
@@ -36,6 +37,7 @@ export const seeAllStats = async()=> {
 
 //Admin: see all grievances
 export const seeAllGrievances = async()=> {
+    const token = getToken();
     const res = await axios.get(`${API}/all`, {
         headers: { Authorization: `Bearer ${token}` }
     })
@@ -44,6 +46,7 @@ export const seeAllGrievances = async()=> {
 
 //Admin: updating the status of grievances
 export const updateStatus = async(id, status)=> {
+    const token = getToken();
     const res = await axios.put(`${API}/status/${id}`, {status}, {
         headers: { Authorization: `Bearer ${token}` }
     })
@@ -52,6 +55,7 @@ export const updateStatus = async(id, status)=> {
 
 //User: update grievances
 export const update = async(id, data)=> {
+    const token = getToken();
     const res = await axios.put(`${API}/${id}`, data, {
         headers: { Authorization: `Bearer ${token}` }
     })
@@ -60,6 +64,7 @@ export const update = async(id, data)=> {
 
 //User: delete grievances
 export const deleteG = async(id)=> {
+    const token = getToken();
     const res = await axios.delete(`${API}/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
     })
