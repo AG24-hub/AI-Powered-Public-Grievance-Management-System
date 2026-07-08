@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import axios from "axios";
+import { sendMessageToBot } from "../Services/chatbotService";
 
 const ChatbotContext = createContext();
 
@@ -30,17 +31,12 @@ export const ChatbotProvider = ({ children }) => {
 
         try {
 
-            const response = await axios.post(
-                "http://localhost:5000/api/chat",
-                {
-                    question
-                }
-            );
+            const response = await sendMessageToBot(question)
 
             setMessages(prev => [
                 ...prev,
                 {
-                    text: response.data.answer,
+                    text: response,
                     isBot: true
                 }
             ]);
