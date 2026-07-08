@@ -1,7 +1,8 @@
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_mistralai import ChatMistralAI
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.output_parsers import StrOutputParser
 from dotenv import load_dotenv
 import os
@@ -49,7 +50,7 @@ prompt = ChatPromptTemplate.from_messages(
         (
             "system", 
             """
-            Yor are a helpful grievance assistant.
+            You are a helpful grievance assistant.
             Rules:
             - Use ONLY the provided context.
             - Do not make up information.
@@ -60,6 +61,7 @@ prompt = ChatPromptTemplate.from_messages(
             - Keep responses concise (2_3 lines)
             """
         ),
+        MessagesPlaceholder(variable_name="history"),
         (
             "human",
             """
@@ -77,7 +79,18 @@ prompt = ChatPromptTemplate.from_messages(
 print("RAG system is ready. Ask your question!")
 print("Press 0 to exit ")
 
-def get_response(query: str):
+def get_response(query: str, history: list):
+    chat_history = []
+
+    for msg in history:
+        if msg.role == "user":
+            chat_history.append(
+                HumanMessage(content=msg.content)
+            )
+        else:
+            chat_history.append(
+                AIMessage(content=msg.content)
+            )
 
     docs = retriever.invoke(query)
 
@@ -86,6 +99,7 @@ def get_response(query: str):
     chain = prompt | llm | StrOutputParser()
 
     response = chain.invoke({
+        "history": chat_history,
         "context": context,
         "question": query
     })
