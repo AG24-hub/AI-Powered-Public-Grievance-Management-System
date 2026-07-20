@@ -25,7 +25,7 @@ const chatbot = async (req, res) => {
 
         const history = chat.messages.slice(-10)
         const response = await axios.post(
-            "http://127.0.0.1:8000/chat",
+            "http:bot:8000/chat",
             {
                 question, history
             }
