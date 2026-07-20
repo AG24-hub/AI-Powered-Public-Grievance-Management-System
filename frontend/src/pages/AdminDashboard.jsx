@@ -4,7 +4,7 @@ import { Search } from 'lucide-react';
 import AdminSideBar from "../components/AdminSidebar"
 import UserContext from '../context/UserProvider';
 import {GrievanceContext} from '../context/GrievanceProvider';
-import UpdateStatusModal from '../components/modals/updateStatusModal';
+import UpdateStatusModal from '../components/modals/UpdateStatusModal';
 import InsightsModal from '../components/modals/InsightsModal';
 import AddAdminModal from '../components/modals/AddAdminModal';
 
