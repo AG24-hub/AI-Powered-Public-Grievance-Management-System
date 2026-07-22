@@ -153,4 +153,15 @@ const getStats = expressAsyncHandler(async (req, res)=> {
     }
 })
 
-module.exports = {lodgeGrievances, seeMyGrievances, updateGrievance, deleteGrievance, seeAllGrievances, updateStatus, getStats};
+const seeGrievancesByStatus = expressAsyncHandler(async(req, res)=> {
+    const grievances = await Grievance.find({status: "Pending"}).populate("user", "name email").sort("-createdAt")
+
+    if(!grievances){
+        res.status(404);
+        throw new Error("No grievance found");
+    }
+
+    res.status(200).json(grievances)
+})
+
+module.exports = {lodgeGrievances, seeMyGrievances, updateGrievance, deleteGrievance, seeAllGrievances, updateStatus, getStats, seeGrievancesByStatus};

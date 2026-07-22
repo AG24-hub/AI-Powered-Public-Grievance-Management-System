@@ -10,6 +10,7 @@ const Dashboard = () => {
   const {grievances, fetchMyGrievances, stats, fetchStats} = useContext(GrievanceContext)
 
   const [activeTab, setActiveTab] = useState("Dashboard");
+  const [selectedStatus, setSelectedStatus] = useState(null); // null, "pending", "processing", "resolved"
 
   useEffect(()=> {
     if (location.pathname === "/dashboard") {
@@ -24,6 +25,10 @@ const Dashboard = () => {
     { label: "Processing", val: stats?.processing || 0, color: "from-amber-400 to-orange-500" },
     { label: "Resolved", val: stats?.resolved || 0, color: "from-green-500 to-emerald-600" }
   ];
+
+  const displayedGrievances = selectedStatus
+    ? grievances.filter(g => g.status?.toLowerCase() === selectedStatus)
+    : grievances;
 
   return (
       <div className="flex flex-col md:flex-row h-screen bg-slate-50 font-sans">
@@ -61,6 +66,25 @@ const Dashboard = () => {
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200">
               <div className="px-6 py-4 border-b flex justify-between items-center">
                 <h3 className="font-bold text-slate-800">Recent Grievances</h3>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold text-slate-500 mr-1">Filter:</span>
+                  {["Pending", "Processing", "Resolved"].map((status) => {
+                    const isActive = selectedStatus === status.toLowerCase();
+                    return (
+                      <button
+                        key={status}
+                        onClick={() => setSelectedStatus(isActive ? null : status.toLowerCase())}
+                        className={`px-3 py-1 rounded-full text-xs font-bold transition-all duration-200 border ${
+                          isActive 
+                            ? 'bg-blue-600 text-white border-blue-600 shadow-sm' 
+                            : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
+                        }`}
+                      >
+                        {status}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
               
               <div className="overflow-x-auto">
@@ -74,27 +98,31 @@ const Dashboard = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {grievances.length === 0 && (
+                    {displayedGrievances.length === 0 && (
                         <tr>
                           <td colSpan="4" className="text-center py-6 text-gray-400">
                             No grievances found
                           </td>
                         </tr>
                       )}
-                      {grievances?.map((g) => (
-                        <tr key={g._id} className="hover:bg-slate-50 transition">
-                          {/*ID */}
-                          <td className="px-6 py-4 font-mono text-sm text-blue-600">{g._id}</td>
-                          {/*Description*/}
-                          <td className="px-6 py-4 text-slate-600 text-sm italic">{g.complaintDetails}</td>
-                          {/*status*/}
-                          <td className="px-6 py-4">
-                            <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-600">{g.status?.toUpperCase()}</span>
-                          </td>
-                          {/*Date*/}
-                          <td className="px-6 py-4 text-slate-400 text-sm">{new Date(g.createdAt).toLocaleDateString()}</td>
-                        </tr>
-                      ))}
+                      {displayedGrievances?.map((g) => {
+                        const match = statsData.find(s => s.label.toLowerCase() === g.status?.toLowerCase());
+                        const badgeColorClass = match ? `bg-gradient-to-r ${match.color}` : 'bg-blue-500';
+                        return (
+                          <tr key={g._id} className="hover:bg-slate-50 transition">
+                            {/*ID */}
+                            <td className="px-6 py-4 font-mono text-sm text-blue-600">{g._id}</td>
+                            {/*Description*/}
+                            <td className="px-6 py-4 text-slate-600 text-sm italic">{g.complaintDetails}</td>
+                            {/*status*/}
+                            <td className="px-6 py-4">
+                              <span className={`px-3 py-1 rounded-full text-[11px] font-bold text-white ${badgeColorClass}`}>{g.status?.toUpperCase()}</span>
+                            </td>
+                            {/*Date*/}
+                            <td className="px-6 py-4 text-slate-400 text-sm">{new Date(g.createdAt).toLocaleDateString()}</td>
+                          </tr>
+                        );
+                      })}
                   </tbody>
                 </table>
               </div>
