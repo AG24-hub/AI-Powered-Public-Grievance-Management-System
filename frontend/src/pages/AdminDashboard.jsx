@@ -11,7 +11,7 @@ import AddAdminModal from '../components/modals/AddAdminModal';
 const AdminDashboard = () => {
 
   const {user} = useContext(UserContext)
-  const {allGrievances, fetchAllGrievances, stats, fetchStats} = useContext(GrievanceContext)
+  const {allGrievances, fetchAllGrievances, stats, fetchStats, currentPage, totalPages} = useContext(GrievanceContext)
 
   const [activeTab, setActiveTab] = useState("My Client");
   const [modalType, setModalType] = useState(null);
@@ -142,6 +142,35 @@ const AdminDashboard = () => {
                       })}
                   </tbody>
                 </table>
+              </div>
+
+              {/* Pagination Controls */}
+              <div className="px-6 py-4 border-t border-slate-200 flex justify-between items-center">
+                <button 
+                  disabled={currentPage === 1}
+                  onClick={() => fetchAllGrievances(currentPage - 1)}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 border ${
+                    currentPage === 1
+                      ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
+                      : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400'
+                  }`}
+                >
+                  ← Previous
+                </button>
+                <span className="text-sm font-medium text-slate-600">
+                  Page <span className="font-bold text-slate-800">{currentPage}</span> of <span className="font-bold text-slate-800">{totalPages}</span>
+                </span>
+                <button 
+                  disabled={currentPage === totalPages}
+                  onClick={() => fetchAllGrievances(currentPage + 1)}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 border ${
+                    currentPage === totalPages
+                      ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
+                      : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400'
+                  }`}
+                >
+                  Next →
+                </button>
               </div>
             </div>
           </div>

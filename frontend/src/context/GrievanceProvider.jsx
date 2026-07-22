@@ -8,6 +8,8 @@ export const GrievanceContext = createContext()
 export const GrievanceProvider = ({children})=> {
     const [grievances, setGrievances] = useState([])
     const [allGrievances, setAllGrievances] = useState([])
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const [stats, setStats] = useState(null)
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null)
@@ -60,7 +62,7 @@ export const GrievanceProvider = ({children})=> {
       try {
         setLoading(true);
         const data = await seeMyGrievances()
-        console.log("Full API Response:", data)
+        //console.log("Full API Response:", data)
         setGrievances(data);
       } catch (error) {
         setError(error.message);
@@ -70,12 +72,14 @@ export const GrievanceProvider = ({children})=> {
     };
 
     //get all grievances
-    const fetchAllGrievances = async () => {
+    const fetchAllGrievances = async (page=1) => {
       try {
         setLoading(true);
-        const data = await seeAllGrievances()
-        //console.log(data)
-        setAllGrievances(data);
+        const data = await seeAllGrievances(page, 10)
+        console.log(data)
+        setAllGrievances(data.grievances);
+        setCurrentPage(data.currentPage);
+        setTotalPages(data.totalPages);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -118,7 +122,7 @@ export const GrievanceProvider = ({children})=> {
     };
 
   return (
-    <GrievanceContext.Provider value={{grievances, fetchMyGrievances, allGrievances, fetchAllGrievances, stats, fetchStats, changeStatus, createComplaint, deleteComplaint, updateComplaint}}>
+    <GrievanceContext.Provider value={{grievances, fetchMyGrievances, allGrievances, fetchAllGrievances, stats, fetchStats, changeStatus, createComplaint, deleteComplaint, updateComplaint, currentPage, totalPages}}>
         {children}
     </GrievanceContext.Provider>
   )

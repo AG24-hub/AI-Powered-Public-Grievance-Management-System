@@ -36,9 +36,9 @@ export const seeAllStats = async()=> {
 }
 
 //Admin: see all grievances
-export const seeAllGrievances = async()=> {
+export const seeAllGrievances = async(page = 1, limit = 10)=> {
     const token = getToken();
-    const res = await axios.get(`${API}/all`, {
+    const res = await axios.get(`${API}/all?page=${page}&limit=${limit}`, {
         headers: { Authorization: `Bearer ${token}` }
     })
     return res.data
