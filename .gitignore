@@ -73,4 +73,3 @@ __pycache__/
 .env 
 *.pyc 
 chroma_db/
-data

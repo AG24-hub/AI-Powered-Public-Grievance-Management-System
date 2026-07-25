@@ -1,7 +1,7 @@
 const { createClient } = require("redis");
 
 const redisClient = createClient({
-    url: process.env.REDIS_URL,
+    url: process.env.UPSTASH_REDIS_REST_URL
 });
 
 redisClient.on("connect", () => {
