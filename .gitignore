@@ -72,4 +72,3 @@ Thumbs.db
 __pycache__/ 
 .env 
 *.pyc 
-chroma_db/
