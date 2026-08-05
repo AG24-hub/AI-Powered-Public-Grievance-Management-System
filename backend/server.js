@@ -43,7 +43,16 @@ connectDB();
         })
     );
 
-    app.use(express.json())  //middleware that parses the incoming req, without it the req will be undefined and backend will never recieve the data from frontend.
+    app.use(express.json())  //middleware that parses the incoming req
+
+    // Root & Health Check Endpoints
+    app.get('/', (req, res) => {
+        res.status(200).json({ success: true, message: "Civic-AI Backend API is active" });
+    });
+
+    app.get('/api/health', (req, res) => {
+        res.status(200).json({ success: true, status: "OK" });
+    });
 
     app.use('/api/user', userRoutes)
     app.use('/api/grievances', grievanceRoutes)

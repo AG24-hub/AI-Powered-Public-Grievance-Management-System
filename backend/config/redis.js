@@ -13,7 +13,11 @@ redisClient.on("error", (err) => {
 });
 
 const connectRedis = async () => {
-    await redisClient.connect();
+    try {
+        await redisClient.connect();
+    } catch (err) {
+        console.error("⚠️ Redis Connection Warning (continuing without cache):", err.message);
+    }
 };
 
 module.exports = {
