@@ -30,8 +30,8 @@ const AdminDashboard = () => {
   ];
 
   const displayedGrievances = selectedStatus
-    ? allGrievances.filter(g => g.status?.toLowerCase() === selectedStatus)
-    : allGrievances;
+    ? (selectedStatus === "all" ? grievances : grievances.filter(g => g.status?.toLowerCase() === selectedStatus))
+    : grievances;
 
   return (
       <div className="flex flex-col md:flex-row h-screen bg-slate-50 font-sans">
@@ -72,7 +72,7 @@ const AdminDashboard = () => {
                 <h3 className="font-bold text-slate-800">Recent Grievances</h3>
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-semibold text-slate-500 mr-1">Filter:</span>
-                  {["Pending", "Processing", "Resolved"].map((status) => {
+                  {["all", "Pending", "Processing", "Resolved"].map((status) => {
                     const isActive = selectedStatus === status.toLowerCase();
                     return (
                       <button

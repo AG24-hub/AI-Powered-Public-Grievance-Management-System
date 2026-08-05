@@ -19,8 +19,6 @@ services:
       - "5000:5000"
     env_file:
       - ./backend/.env
-    depends_on:
-      - bot
 
   redis:
     image: redis:7-alpine
@@ -30,16 +28,6 @@ services:
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
       - redis-data:/data
-      
-  bot:
-    build:
-      context: ./chatbot
-      dockerfile: Dockerfile
-    container_name: CivicAI-bot
-    ports:
-      - "8000:8000"
-    env_file:
-      - ./chatbot/.env
 
 volumes:
-  mongodb_data:
+  redis-data:
