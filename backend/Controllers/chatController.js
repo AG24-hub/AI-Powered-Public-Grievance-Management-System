@@ -1,5 +1,5 @@
-const axios = require("axios");
 const Chat = require("../Models/chatModel");
+const { getChatbotResponse } = require("../Services/chatbotService");
 
 const chatbot = async (req, res) => {
     try {
@@ -24,26 +24,23 @@ const chatbot = async (req, res) => {
         }
 
         const history = chat.messages.slice(-10)
-        const response = await axios.post(
-            "http:bot:8000/chat",
-            {
-                question, history
-            }
-        );
+
+        // Call local chatbot service (Gemini + Mistral fallback)
+        const answer = await getChatbotResponse(question, history);
 
         chat.messages.push({
             role: "user", content: question
         })
 
         chat.messages.push({
-            role: "assistant", content: response.data.answer
+            role: "assistant", content: answer
         })
 
         await chat.save()
 
         return res.status(200).json({
             success: true,
-            answer: response.data.answer
+            answer: answer
         });
 
     } catch (error) {

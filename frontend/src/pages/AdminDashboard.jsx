@@ -73,6 +73,7 @@ const AdminDashboard = () => {
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-semibold text-slate-500 mr-1">Filter:</span>
                   {["All", "Pending", "Processing", "Resolved"].map((status) => {
+
                     const isActive = selectedStatus === status.toLowerCase();
                     return (
                       <button
