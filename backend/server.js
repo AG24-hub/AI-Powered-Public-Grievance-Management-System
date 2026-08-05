@@ -16,8 +16,30 @@ connectDB();
 
     app.use(
         cors({
-            origin: "http://localhost:5173",
-            credentials: true
+            origin: function (origin, callback) {
+                // allow requests with no origin (like mobile apps, curl, or server-to-server)
+                if (!origin) return callback(null, true);
+
+                const allowedOrigins = [
+                    "http://localhost:5173",
+                    "http://localhost:4173",
+                    process.env.FRONTEND_URL
+                ].filter(Boolean);
+
+                if (
+                    allowedOrigins.includes(origin) ||
+                    process.env.FRONTEND_URL === "*" ||
+                    !process.env.FRONTEND_URL ||
+                    process.env.NODE_ENV !== "production"
+                ) {
+                    return callback(null, origin);
+                }
+
+                return callback(null, origin);
+            },
+            credentials: true,
+            methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+            allowedHeaders: ["Content-Type", "Authorization"]
         })
     );
 

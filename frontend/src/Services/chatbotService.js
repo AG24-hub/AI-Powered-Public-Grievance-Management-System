@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
 const getToken = () => {
     const userInfo = localStorage.getItem("userInfo");
     return userInfo ? JSON.parse(userInfo).token : null;
@@ -9,7 +11,7 @@ export const sendMessageToBot = async (question) => {
     const token = getToken()
 
     const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/chat`,
+        `${API_URL}/api/chat`,
         {
             question
         },{

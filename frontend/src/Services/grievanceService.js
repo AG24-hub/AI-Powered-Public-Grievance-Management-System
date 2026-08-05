@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API = "/api/grievances"
+const API_URL = import.meta.env.VITE_API_URL || "";
+const API = `${API_URL}/api/grievances`;
 
 //as I have saved everything under userInfo in my log in function I will first fetch it
 const getToken = () => {
