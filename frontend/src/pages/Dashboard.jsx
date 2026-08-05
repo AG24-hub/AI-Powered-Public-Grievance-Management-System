@@ -27,7 +27,7 @@ const Dashboard = () => {
   ];
 
   const displayedGrievances = selectedStatus
-    ? grievances.filter(g => g.status?.toLowerCase() === selectedStatus)
+    ? (selectedStatus === "All" ? grievances : grievances.filter(g => g.status?.toLowerCase() === selectedStatus))
     : grievances;
 
   return (
@@ -68,7 +68,7 @@ const Dashboard = () => {
                 <h3 className="font-bold text-slate-800">Recent Grievances</h3>
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-semibold text-slate-500 mr-1">Filter:</span>
-                  {["Pending", "Processing", "Resolved"].map((status) => {
+                  {["All", "Pending", "Processing", "Resolved"].map((status) => {
                     const isActive = selectedStatus === status.toLowerCase();
                     return (
                       <button
